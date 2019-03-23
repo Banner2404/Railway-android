@@ -8,5 +8,6 @@ import kotlinx.android.synthetic.main.ticket_list_view_holder.view.*
 
 class TicketListViewHolder(view: View): RecyclerView.ViewHolder(view) {
 
-    val textView: TextView = view.findViewById(R.id.textView)
+    val stationsTextView: TextView = view.findViewById(R.id.stations_text_view)
+    val dateTextView: TextView = view.findViewById(R.id.date_text_view)
 }
