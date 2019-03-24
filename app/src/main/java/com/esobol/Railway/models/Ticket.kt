@@ -1,10 +1,13 @@
 package com.esobol.Railway.models
 
+import android.arch.persistence.room.Entity
+import android.arch.persistence.room.PrimaryKey
 import java.util.*
 
-class Ticket(val source: String, val destination: String) {
+@Entity
+class Ticket(val source: String, val destination: String, @PrimaryKey val id: String = UUID.randomUUID().toString()) {
 
-    val departureDate = Date()
+    var departureDate = Date()
     var arrivalDate = Date()
 
 }

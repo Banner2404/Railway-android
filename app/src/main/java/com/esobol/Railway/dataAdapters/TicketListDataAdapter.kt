@@ -10,12 +10,7 @@ import com.esobol.Railway.models.Ticket
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 
-class TicketListDataAdapter(val context: Context): RecyclerView.Adapter<TicketListViewHolder>() {
-
-    private val tickets: ArrayList<Ticket> = arrayListOf(
-        Ticket("Минск", "Брест"),
-        Ticket("Минск", "Брест"),
-        Ticket("TEst", "Station"))
+class TicketListDataAdapter(val context: Context, var tickets: ArrayList<Ticket>): RecyclerView.Adapter<TicketListViewHolder>() {
 
     override fun onCreateViewHolder(p0: ViewGroup, p1: Int): TicketListViewHolder {
         val view = LayoutInflater.from(p0.context).inflate(R.layout.ticket_list_view_holder, p0, false)
@@ -32,5 +27,10 @@ class TicketListDataAdapter(val context: Context): RecyclerView.Adapter<TicketLi
         viewHolder.stationsTextView.text =
             context.getString(R.string.ticket_list_stations_title, ticket.source, ticket.destination)
         viewHolder.dateTextView.text = formatter.format(ticket.departureDate)
+    }
+
+    fun updateTickets(tickets: ArrayList<Ticket>) {
+        this.tickets = tickets
+        notifyDataSetChanged()
     }
 }
