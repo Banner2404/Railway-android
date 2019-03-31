@@ -10,11 +10,14 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
+            android:name=".activities.AddTicketActivity"
+            android:label="@string/add_ticket_title">
+        </activity>
+        <activity
             android:name=".activities.TicketListActivity"
             android:label="@string/tickets_title">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

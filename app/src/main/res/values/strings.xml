@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">Railway</string>
     <string name="tickets_title">Tickets</string>
-    <string name="ticket_list_stations_title">%s - %s</string>>
+    <string name="add_ticket_title">Add Ticket</string>
+    <string name="ticket_list_stations_title">%s - %s</string>
+    <string name="add_ticket_menu">Add ticket</string>>
 
 </resources>

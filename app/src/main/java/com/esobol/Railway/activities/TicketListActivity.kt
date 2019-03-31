@@ -1,9 +1,12 @@
 package com.esobol.Railway.activities
 
+import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.view.Menu
+import android.view.MenuItem
 import com.esobol.Railway.R
 import com.esobol.Railway.dataAdapters.TicketListDataAdapter
 import com.esobol.Railway.database.TicketRepository
@@ -20,7 +23,7 @@ class TicketListActivity : AppCompatActivity() {
         setContentView(R.layout.activity_ticket_list)
 
         repository = TicketRepository(this)
-        repository.createNew()
+        //repository.createNew()
 
         recyclerView = findViewById(R.id.tickets_recycler_view)
         recyclerView.layoutManager = LinearLayoutManager(this)
@@ -36,5 +39,20 @@ class TicketListActivity : AppCompatActivity() {
 
         fetchTask.execute()
 
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.main_menu, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == R.id.add_ticket) {
+            val intent = Intent(this, AddTicketActivity::class.java)
+            startActivity(intent)
+            return true
+        } else {
+            return super.onOptionsItemSelected(item)
+        }
     }
 }
