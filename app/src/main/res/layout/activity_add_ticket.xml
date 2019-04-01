@@ -7,21 +7,128 @@
     tools:context=".activities.AddTicketActivity"
     android:background="@color/backgroundColor">
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/add_ticket_recycler_view"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginBottom="10dp"
-        android:background="@drawable/ticket_list_background"
-        android:padding="10dp"
+        android:layout_height="match_parent"
+        android:layout_margin="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp"
+            android:background="@drawable/ticket_list_background">
+
+            <EditText
+                android:id="@+id/source_text_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/placeholder_source_station"
+                android:inputType="text"
+                android:singleLine="true"
+                android:background="@android:color/transparent"
+                android:textColor="@color/defaultTextColor"
+                android:textSize="17sp"/>
+
+            <EditText
+                android:id="@+id/destination_text_view"
+                android:layout_marginTop="17dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/placeholder_destination_station"
+                android:inputType="text"
+                android:singleLine="true"
+                android:background="@android:color/transparent"
+                android:textColor="@color/defaultTextColor"
+                android:textSize="17sp"/>
+
+            <LinearLayout
+                android:layout_marginTop="17dp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="2"
+                    android:text="@string/departure"
+                    android:textColor="@color/defaultTextColor"
+                    android:textSize="17sp"/>
+
+                <EditText
+                    android:id="@+id/departure_date_text_view"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:ems="10"
+                    android:inputType="date"
+                    android:background="@android:color/transparent"
+                    android:gravity="end"
+                    android:focusable="false"
+                    android:textColor="@color/defaultTextColor"
+                    android:textSize="17sp"/>
+
+                <EditText
+                    android:id="@+id/departure_time_text_view"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:ems="10"
+                    android:inputType="time"
+                    android:background="@android:color/transparent"
+                    android:gravity="end"
+                    android:focusable="false"
+                    android:textColor="@color/defaultTextColor"
+                    android:textSize="17sp"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_marginTop="17dp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="2"
+                    android:text="@string/arrival"
+                    android:textColor="@color/defaultTextColor"
+                    android:textSize="17sp"/>
+
+                <EditText
+                    android:id="@+id/arrival_date_text_view"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:ems="10"
+                    android:inputType="date"
+                    android:background="@android:color/transparent"
+                    android:gravity="end"
+                    android:textColor="@color/defaultTextColor"
+                    android:focusable="false"
+                    android:textSize="17sp"/>
+
+                <EditText
+                    android:id="@+id/arrival_time_text_view"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:ems="10"
+                    android:inputType="time"
+                    android:background="@android:color/transparent"
+                    android:gravity="end"
+                    android:textColor="@color/defaultTextColor"
+                    android:focusable="false"
+                    android:textSize="17sp"/>
+            </LinearLayout>
+
+        </LinearLayout>
+    </ScrollView>
 
 </android.support.constraint.ConstraintLayout>

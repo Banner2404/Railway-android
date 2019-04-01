@@ -4,5 +4,9 @@
     <string name="add_ticket_title">Add Ticket</string>
     <string name="ticket_list_stations_title">%s - %s</string>
     <string name="add_ticket_menu">Add ticket</string>>
+    <string name="placeholder_source_station">Source</string>>
+    <string name="placeholder_destination_station">Destination</string>>
+    <string name="departure">Departure</string>>
+    <string name="arrival">Arrival</string>>
 
 </resources>
