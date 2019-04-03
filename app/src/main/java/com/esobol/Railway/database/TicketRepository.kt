@@ -3,9 +3,13 @@ package com.esobol.Railway.database
 import android.arch.persistence.room.Room
 import android.content.Context
 import android.os.AsyncTask
+import com.esobol.Railway.activities.TicketListActivity
 import com.esobol.Railway.models.Ticket
+import dagger.Component
+import javax.inject.Inject
+import javax.inject.Named
 
-class TicketRepository(val context: Context) {
+class TicketRepository @Inject constructor(var context: Context) {
 
     val database: Database = Room.databaseBuilder(context, Database::class.java, "database").build()
 
@@ -13,8 +17,7 @@ class TicketRepository(val context: Context) {
         return FetchTask(database)
     }
 
-    fun createNew() {
-        val ticket = Ticket("from", "to")
+    fun create(ticket: Ticket) {
         CreateTask(database, ticket).execute()
     }
 

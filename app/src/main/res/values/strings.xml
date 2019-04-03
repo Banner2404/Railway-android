@@ -8,5 +8,6 @@
     <string name="placeholder_destination_station">Destination</string>>
     <string name="departure">Departure</string>>
     <string name="arrival">Arrival</string>>
+    <string name="save">Save</string>>
 
 </resources>

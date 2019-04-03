@@ -7,13 +7,17 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.Menu
 import android.view.MenuItem
+import com.esobol.Railway.DaggerInjectComponent
+import com.esobol.Railway.MyApplication
 import com.esobol.Railway.R
 import com.esobol.Railway.dataAdapters.TicketListDataAdapter
 import com.esobol.Railway.database.TicketRepository
 import com.esobol.Railway.models.Ticket
+import javax.inject.Inject
 
 class TicketListActivity : AppCompatActivity() {
 
+    @Inject
     lateinit var repository: TicketRepository
     lateinit var recyclerView: RecyclerView
     lateinit var adapter: TicketListDataAdapter
@@ -21,8 +25,9 @@ class TicketListActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_ticket_list)
+        MyApplication.component.inject(this)
 
-        repository = TicketRepository(this)
+        //repository = TicketRepository(this)
         //repository.createNew()
 
         recyclerView = findViewById(R.id.tickets_recycler_view)

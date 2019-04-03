@@ -9,17 +9,29 @@ import android.support.v4.content.ContextCompat
 import android.support.v7.widget.AppCompatEditText
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.text.Editable
+import android.text.TextWatcher
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import android.widget.DatePicker
 import android.widget.EditText
 import android.widget.TimePicker
+import com.esobol.Railway.MyApplication
 import com.esobol.Railway.R
+import com.esobol.Railway.database.TicketRepository
+import com.esobol.Railway.models.Ticket
 import java.lang.Exception
 import java.text.SimpleDateFormat
 import java.util.*
+import javax.inject.Inject
 
-class AddTicketActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener, View.OnClickListener {
+class AddTicketActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener, View.OnClickListener, TextWatcher {
 
+    @Inject
+    lateinit var ticketRepository: TicketRepository
+    private lateinit var sourceEditText: EditText
+    private lateinit var destinationEditText: EditText
     private lateinit var departureDateEditText: EditText
     private lateinit var departureTimeEditText: EditText
     private lateinit var arrivalDateEditText: EditText
@@ -27,13 +39,18 @@ class AddTicketActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListene
     private lateinit var departureDate: Calendar
     private lateinit var arrivalDate: Calendar
     private var activeEditTextId: Int = 0
+    private var isValid = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_ticket)
+        MyApplication.component.inject(this)
         departureDate = Calendar.getInstance()
         arrivalDate = Calendar.getInstance()
         arrivalDate.add(Calendar.HOUR, 1)
+
+        sourceEditText = findViewById(R.id.source_text_view)
+        destinationEditText = findViewById(R.id.destination_text_view)
 
         departureDateEditText = findViewById(R.id.departure_date_text_view)
         departureTimeEditText = findViewById(R.id.departure_time_text_view)
@@ -47,6 +64,21 @@ class AddTicketActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListene
 
         updateDepartureDate()
         updateArrivalDate()
+
+        sourceEditText.addTextChangedListener(this)
+        destinationEditText.addTextChangedListener(this)
+    }
+
+    override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
+        validateInput()
+    }
+
+    override fun afterTextChanged(s: Editable?) {
+
+    }
+
+    override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+
     }
 
     override fun onClick(v: View) {
@@ -79,11 +111,14 @@ class AddTicketActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListene
 
     fun updateArrivalDate() {
         updateDisplayedDate(arrivalDateEditText, arrivalTimeEditText, arrivalDate)
+    }
+
+    fun updateArrivalColor(isValidDates: Boolean) {
         val color: Int
-        if (departureDate > arrivalDate) {
-            color = ContextCompat.getColor(this, R.color.errorTextColor)
-        } else {
+        if (isValidDates) {
             color = ContextCompat.getColor(this, R.color.defaultTextColor)
+        } else {
+            color = ContextCompat.getColor(this, R.color.errorTextColor)
         }
         arrivalDateEditText.setTextColor(color)
         arrivalTimeEditText.setTextColor(color)
@@ -107,6 +142,7 @@ class AddTicketActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListene
                 updateArrivalDate()
             }
         }
+        validateInput()
     }
 
     override fun onTimeSet(view: TimePicker, hourOfDay: Int, minute: Int) {
@@ -122,5 +158,35 @@ class AddTicketActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListene
                 updateArrivalDate()
             }
         }
+        validateInput()
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.add_ticket_menu, menu)
+        return true
+    }
+
+    override fun onPrepareOptionsMenu(menu: Menu): Boolean {
+        menu.findItem(R.id.save_button).setEnabled(isValid)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == R.id.save_button) {
+            val ticket = Ticket(sourceEditText.text.toString(), destinationEditText.text.toString(), departureDate.time, arrivalDate.time)
+            ticketRepository.create(ticket)
+            return true
+        } else {
+            return false
+        }
+    }
+
+    fun validateInput() {
+        val isValidSource = !sourceEditText.text.toString().isBlank()
+        val isValidDestination = !destinationEditText.text.toString().isBlank()
+        val isValidDates = departureDate < arrivalDate
+        isValid = isValidSource && isValidDestination && isValidDates
+        updateArrivalColor(isValidDates)
+        invalidateOptionsMenu()
     }
 }
