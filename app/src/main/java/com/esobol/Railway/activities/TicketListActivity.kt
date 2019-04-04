@@ -27,9 +27,6 @@ class TicketListActivity : AppCompatActivity() {
         setContentView(R.layout.activity_ticket_list)
         MyApplication.component.inject(this)
 
-        //repository = TicketRepository(this)
-        //repository.createNew()
-
         recyclerView = findViewById(R.id.tickets_recycler_view)
         recyclerView.layoutManager = LinearLayoutManager(this)
         adapter = TicketListDataAdapter(this, arrayListOf())

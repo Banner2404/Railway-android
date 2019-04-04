@@ -2,13 +2,9 @@ package com.esobol.Railway.activities
 
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
-import android.graphics.Color
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v4.content.ContextCompat
-import android.support.v7.widget.AppCompatEditText
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.Menu
@@ -16,12 +12,12 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.DatePicker
 import android.widget.EditText
+import android.widget.LinearLayout
 import android.widget.TimePicker
 import com.esobol.Railway.MyApplication
 import com.esobol.Railway.R
 import com.esobol.Railway.database.TicketRepository
 import com.esobol.Railway.models.Ticket
-import java.lang.Exception
 import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
@@ -36,6 +32,8 @@ class AddTicketActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListene
     private lateinit var departureTimeEditText: EditText
     private lateinit var arrivalDateEditText: EditText
     private lateinit var arrivalTimeEditText: EditText
+    private lateinit var linearLayout: LinearLayout
+    private lateinit var addPlaceButton: View
     private lateinit var departureDate: Calendar
     private lateinit var arrivalDate: Calendar
     private var activeEditTextId: Int = 0
@@ -57,6 +55,9 @@ class AddTicketActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListene
         arrivalDateEditText = findViewById(R.id.arrival_date_text_view)
         arrivalTimeEditText = findViewById(R.id.arrival_time_text_view)
 
+        linearLayout = findViewById(R.id.linear_layout)
+        addPlaceButton = findViewById(R.id.add_place_view)
+
         departureDateEditText.setOnClickListener(this)
         departureTimeEditText.setOnClickListener(this)
         arrivalDateEditText.setOnClickListener(this)
@@ -67,6 +68,11 @@ class AddTicketActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListene
 
         sourceEditText.addTextChangedListener(this)
         destinationEditText.addTextChangedListener(this)
+        addPlaceView()
+
+        addPlaceButton.setOnClickListener {
+            addPlaceView()
+        }
     }
 
     override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
@@ -188,5 +194,18 @@ class AddTicketActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListene
         isValid = isValidSource && isValidDestination && isValidDates
         updateArrivalColor(isValidDates)
         invalidateOptionsMenu()
+    }
+
+    fun addPlaceView() {
+        val view = layoutInflater.inflate(R.layout.edit_place_view, linearLayout, false)
+        val index = linearLayout.indexOfChild(addPlaceButton.parent as View)
+        linearLayout.addView(view, index)
+        view.findViewById<View>(R.id.remove_button).setOnClickListener {
+            removePlaceView(it)
+        }
+    }
+
+    fun removePlaceView(view: View) {
+        linearLayout.removeView(view.parent as View)
     }
 }

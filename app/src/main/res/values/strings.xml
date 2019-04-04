@@ -8,6 +8,9 @@
     <string name="placeholder_destination_station">Destination</string>>
     <string name="departure">Departure</string>>
     <string name="arrival">Arrival</string>>
-    <string name="save">Save</string>>
+    <string name="save">Save</string>
+    <string name="add_place">Add place</string>
+    <string name="seat">Seat</string>
+    <string name="carriage">Carriage</string>>
 
 </resources>
