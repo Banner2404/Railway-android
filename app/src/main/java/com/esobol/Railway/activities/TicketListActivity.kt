@@ -13,6 +13,7 @@ import com.esobol.Railway.R
 import com.esobol.Railway.dataAdapters.TicketListDataAdapter
 import com.esobol.Railway.database.TicketRepository
 import com.esobol.Railway.models.Ticket
+import com.esobol.Railway.models.TicketWithPlaces
 import javax.inject.Inject
 
 class TicketListActivity : AppCompatActivity() {
@@ -34,7 +35,7 @@ class TicketListActivity : AppCompatActivity() {
 
         val fetchTask = repository.getTickets()
         fetchTask.listener = object : TicketRepository.FetchTask.Listener {
-            override fun onDataLoaded(tickets: ArrayList<Ticket>) {
+            override fun onDataLoaded(tickets: ArrayList<TicketWithPlaces>) {
                 adapter.updateTickets(tickets)
             }
         }

@@ -17,7 +17,9 @@ import android.widget.TimePicker
 import com.esobol.Railway.MyApplication
 import com.esobol.Railway.R
 import com.esobol.Railway.database.TicketRepository
+import com.esobol.Railway.models.Place
 import com.esobol.Railway.models.Ticket
+import com.esobol.Railway.models.TicketWithPlaces
 import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
@@ -180,7 +182,10 @@ class AddTicketActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListene
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == R.id.save_button) {
             val ticket = Ticket(sourceEditText.text.toString(), destinationEditText.text.toString(), departureDate.time, arrivalDate.time)
-            ticketRepository.create(ticket)
+            val ticketWithPlaces = TicketWithPlaces()
+            ticketWithPlaces.ticket = ticket
+            ticketWithPlaces.places = arrayListOf(Place(1, "5", ticket.id))
+            ticketRepository.create(ticketWithPlaces)
             return true
         } else {
             return false

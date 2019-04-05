@@ -7,10 +7,11 @@ import android.view.ViewGroup
 import com.esobol.Railway.R
 import com.esobol.Railway.viewHolders.TicketListViewHolder
 import com.esobol.Railway.models.Ticket
+import com.esobol.Railway.models.TicketWithPlaces
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 
-class TicketListDataAdapter(val context: Context, var tickets: ArrayList<Ticket>): RecyclerView.Adapter<TicketListViewHolder>() {
+class TicketListDataAdapter(val context: Context, var tickets: ArrayList<TicketWithPlaces>): RecyclerView.Adapter<TicketListViewHolder>() {
 
     override fun onCreateViewHolder(p0: ViewGroup, p1: Int): TicketListViewHolder {
         val view = LayoutInflater.from(p0.context).inflate(R.layout.ticket_list_view_holder, p0, false)
@@ -22,14 +23,14 @@ class TicketListDataAdapter(val context: Context, var tickets: ArrayList<Ticket>
     }
 
     override fun onBindViewHolder(viewHolder: TicketListViewHolder, index: Int) {
-        val ticket = tickets[index]
+        val ticket = tickets[index].ticket
         val formatter = SimpleDateFormat("EEEE, d MMMM, HH:mm")
         viewHolder.stationsTextView.text =
             context.getString(R.string.ticket_list_stations_title, ticket.source, ticket.destination)
         viewHolder.dateTextView.text = formatter.format(ticket.departureDate)
     }
 
-    fun updateTickets(tickets: ArrayList<Ticket>) {
+    fun updateTickets(tickets: ArrayList<TicketWithPlaces>) {
         this.tickets = tickets
         notifyDataSetChanged()
     }
