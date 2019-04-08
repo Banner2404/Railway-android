@@ -6,9 +6,11 @@ import android.arch.persistence.room.PrimaryKey
 import java.util.*
 
 @Entity
-class Place(val carriage: Int,
-            val seat: String,
-            val ticketId: String,
-            @PrimaryKey val id: String = UUID.randomUUID().toString()) {
+class Place() {
+
+    var carriage: Int = 0
+    var seat: String = ""
+    var ticketId: String = ""
+    @PrimaryKey var id: String = UUID.randomUUID().toString()
 
 }

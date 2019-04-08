@@ -20,9 +20,11 @@ import com.esobol.Railway.database.TicketRepository
 import com.esobol.Railway.models.Place
 import com.esobol.Railway.models.Ticket
 import com.esobol.Railway.models.TicketWithPlaces
+import com.esobol.Railway.views.EditPlaceView
 import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
+import kotlin.collections.ArrayList
 
 class AddTicketActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener, View.OnClickListener, TextWatcher {
 
@@ -40,6 +42,7 @@ class AddTicketActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListene
     private lateinit var arrivalDate: Calendar
     private var activeEditTextId: Int = 0
     private var isValid = false
+    private var places: ArrayList<Place> = arrayListOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -184,7 +187,8 @@ class AddTicketActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListene
             val ticket = Ticket(sourceEditText.text.toString(), destinationEditText.text.toString(), departureDate.time, arrivalDate.time)
             val ticketWithPlaces = TicketWithPlaces()
             ticketWithPlaces.ticket = ticket
-            ticketWithPlaces.places = arrayListOf(Place(1, "5", ticket.id))
+            places.forEach { it.ticketId = ticket.id }
+            ticketWithPlaces.places = places
             ticketRepository.create(ticketWithPlaces)
             return true
         } else {
@@ -196,21 +200,61 @@ class AddTicketActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListene
         val isValidSource = !sourceEditText.text.toString().isBlank()
         val isValidDestination = !destinationEditText.text.toString().isBlank()
         val isValidDates = departureDate < arrivalDate
-        isValid = isValidSource && isValidDestination && isValidDates
+        val placesNotEmpty = !places.isEmpty()
+        val isValidPlaces = places.all { it.carriage > 0 && !it.seat.isBlank() }
+        isValid = isValidSource && isValidDestination && isValidDates && placesNotEmpty && isValidPlaces
         updateArrivalColor(isValidDates)
         invalidateOptionsMenu()
     }
 
     fun addPlaceView() {
-        val view = layoutInflater.inflate(R.layout.edit_place_view, linearLayout, false)
+        val view = layoutInflater.inflate(R.layout.edit_place_view, linearLayout, false) as EditPlaceView
         val index = linearLayout.indexOfChild(addPlaceButton.parent as View)
         linearLayout.addView(view, index)
-        view.findViewById<View>(R.id.remove_button).setOnClickListener {
+        val newPlace = Place()
+        places.add(newPlace)
+        view.placeId = newPlace.id
+        view.removeButton.setOnClickListener {
             removePlaceView(it)
         }
+
+        view.carriageEditText.addTextChangedListener(object : TextWatcher {
+            override fun onTextChanged(string: CharSequence?, start: Int, before: Int, count: Int) {
+                newPlace.carriage = string.toString().toIntOrNull() ?: 0
+                validateInput()
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+
+            }
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+
+            }
+        })
+
+        view.seatEditText.addTextChangedListener(object : TextWatcher {
+            override fun onTextChanged(string: CharSequence?, start: Int, before: Int, count: Int) {
+                newPlace.seat = string.toString()
+                validateInput()
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+
+            }
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+
+            }
+        })
+        validateInput()
     }
 
     fun removePlaceView(view: View) {
-        linearLayout.removeView(view.parent as View)
+        val placeView = view.parent as EditPlaceView
+        val index = places.indexOfFirst { it.id == placeView.placeId }
+        places.removeAt(index)
+        linearLayout.removeView(placeView)
+        validateInput()
     }
 }
