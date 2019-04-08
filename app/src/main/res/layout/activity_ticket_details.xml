@@ -22,15 +22,100 @@
         android:background="@drawable/ticket_list_background">
 
         <TextView
+            android:layout_marginTop="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
             android:id="@+id/source_text_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            tools:text="from " />
+            tools:text="from "
+            android:textSize="20sp"
+            android:textColor="@color/defaultTextColor"/>
 
         <TextView
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
             android:id="@+id/destination_text_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            tools:text="to" />
+            tools:text="to"
+            android:textSize="20sp"
+            android:textColor="@color/defaultTextColor"/>
+
+        <View
+            android:alpha="0.25"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/defaultTextColor"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginTop="12dp"/>
+
+        <LinearLayout
+            android:layout_marginTop="12dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/departure_time_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                tools:text="10:00"
+                android:textSize="30sp"
+                android:textStyle="bold"
+                android:textColor="@color/defaultTextColor"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/hyphen"
+                android:textColor="@color/defaultTextColor"
+                android:textSize="30sp" />
+
+            <TextView
+                android:id="@+id/arrival_time_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textColor="@color/defaultTextColor"
+                android:textSize="30sp"
+                tools:text="20:00" />
+
+        </LinearLayout>
+
+        <TextView
+            android:layout_marginTop="5dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:id="@+id/departure_date_text_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:text="to"
+            android:alpha="0.5"
+            android:textColor="@color/defaultTextColor"
+            android:textSize="18sp"/>
+
+        <View
+            android:alpha="0.25"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/defaultTextColor"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginTop="12dp"/>
+
+        <LinearLayout
+            android:layout_marginTop="11dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:id="@+id/places_linear_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" />
     </LinearLayout>
 </android.support.constraint.ConstraintLayout>
