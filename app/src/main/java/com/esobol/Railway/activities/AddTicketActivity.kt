@@ -1,5 +1,6 @@
 package com.esobol.Railway.activities
 
+import android.app.Activity
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.support.v7.app.AppCompatActivity
@@ -190,6 +191,8 @@ class AddTicketActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListene
             places.forEach { it.ticketId = ticket.id }
             ticketWithPlaces.places = places
             ticketRepository.create(ticketWithPlaces)
+            setResult(Activity.RESULT_OK)
+            finish()
             return true
         } else {
             return false

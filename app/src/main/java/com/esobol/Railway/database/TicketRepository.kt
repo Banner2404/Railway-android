@@ -21,6 +21,10 @@ class TicketRepository @Inject constructor(var context: Context) {
         return FetchTask(database)
     }
 
+    fun getTicket(id: String): FetchTicketTask {
+        return FetchTicketTask(database, id)
+    }
+
     fun create(ticket: TicketWithPlaces) {
         CreateTicketTask(database, ticket.ticket).execute()
         for (place in ticket.places) {
@@ -45,6 +49,26 @@ class TicketRepository @Inject constructor(var context: Context) {
 
         interface Listener {
             fun onDataLoaded(tickets: ArrayList<TicketWithPlaces>)
+        }
+    }
+
+    class FetchTicketTask(val database: Database, val id: String): AsyncTask<Void, Void, TicketWithPlaces>() {
+
+        var listener: Listener? = null
+
+        override fun doInBackground(vararg args: Void?): TicketWithPlaces {
+            return database.ticketDao().getTicketWithId(id)
+        }
+
+        override fun onPostExecute(result: TicketWithPlaces?) {
+            super.onPostExecute(result)
+            result?.let {
+                listener?.onDataLoaded(it)
+            }
+        }
+
+        interface Listener {
+            fun onDataLoaded(tickets: TicketWithPlaces)
         }
     }
 

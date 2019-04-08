@@ -13,7 +13,9 @@ import java.text.SimpleDateFormat
 
 class TicketListDataAdapter(val context: Context, var tickets: ArrayList<TicketWithPlaces>): RecyclerView.Adapter<TicketListViewHolder>() {
 
-    override fun onCreateViewHolder(p0: ViewGroup, p1: Int): TicketListViewHolder {
+    var listener: Listener? = null
+
+    override fun onCreateViewHolder(p0: ViewGroup, index: Int): TicketListViewHolder {
         val view = LayoutInflater.from(p0.context).inflate(R.layout.ticket_list_view_holder, p0, false)
         return TicketListViewHolder(view)
     }
@@ -28,10 +30,17 @@ class TicketListDataAdapter(val context: Context, var tickets: ArrayList<TicketW
         viewHolder.stationsTextView.text =
             context.getString(R.string.ticket_list_stations_title, ticket.source, ticket.destination)
         viewHolder.dateTextView.text = formatter.format(ticket.departureDate)
+        viewHolder.itemView.setOnClickListener {
+            listener?.onTicketClick(tickets[index])
+        }
     }
 
     fun updateTickets(tickets: ArrayList<TicketWithPlaces>) {
         this.tickets = tickets
         notifyDataSetChanged()
+    }
+
+    interface Listener {
+        fun onTicketClick(ticket: TicketWithPlaces)
     }
 }

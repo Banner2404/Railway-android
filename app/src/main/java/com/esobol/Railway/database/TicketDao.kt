@@ -14,4 +14,7 @@ interface TicketDao {
 
     @Query("SELECT * FROM Ticket ORDER BY departureDate")
     fun getAllTickets(): List<TicketWithPlaces>
+
+    @Query("SELECT * FROM Ticket WHERE id == :id")
+    fun getTicketWithId(id: String): TicketWithPlaces
 }
