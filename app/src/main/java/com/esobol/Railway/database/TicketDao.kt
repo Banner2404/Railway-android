@@ -1,8 +1,6 @@
 package com.esobol.Railway.database
 
-import android.arch.persistence.room.Dao
-import android.arch.persistence.room.Insert
-import android.arch.persistence.room.Query
+import android.arch.persistence.room.*
 import com.esobol.Railway.models.Ticket
 import com.esobol.Railway.models.TicketWithPlaces
 
@@ -17,4 +15,10 @@ interface TicketDao {
 
     @Query("SELECT * FROM Ticket WHERE id == :id")
     fun getTicketWithId(id: String): TicketWithPlaces
+
+    @Delete
+    fun deleteTicket(ticket: Ticket)
+
+    @Update
+    fun updateTicket(ticket: Ticket)
 }

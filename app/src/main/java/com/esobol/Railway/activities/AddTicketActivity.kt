@@ -44,14 +44,21 @@ class AddTicketActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListene
     private var activeEditTextId: Int = 0
     private var isValid = false
     private var places: ArrayList<Place> = arrayListOf()
+    private lateinit var type: Type
+    private var updatedTicket: TicketWithPlaces? = null
+
+    enum class Type {
+        CREATE, UPDATE
+    }
+
+    companion object {
+        val TICKET_ID = "TICKET_ID"
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_ticket)
         MyApplication.component.inject(this)
-        departureDate = Calendar.getInstance()
-        arrivalDate = Calendar.getInstance()
-        arrivalDate.add(Calendar.HOUR, 1)
 
         sourceEditText = findViewById(R.id.source_text_view)
         destinationEditText = findViewById(R.id.destination_text_view)
@@ -69,16 +76,57 @@ class AddTicketActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListene
         arrivalDateEditText.setOnClickListener(this)
         arrivalTimeEditText.setOnClickListener(this)
 
-        updateDepartureDate()
-        updateArrivalDate()
-
         sourceEditText.addTextChangedListener(this)
         destinationEditText.addTextChangedListener(this)
-        addPlaceView()
 
         addPlaceButton.setOnClickListener {
             addPlaceView()
         }
+
+        departureDate = Calendar.getInstance()
+        arrivalDate = Calendar.getInstance()
+        arrivalDate.add(Calendar.HOUR, 1)
+
+        if (intent.hasExtra(TICKET_ID)) {
+            val ticketId = intent.getStringExtra(TICKET_ID)
+            setupForUpdate(ticketId)
+        } else {
+            setupForCreate()
+        }
+
+        updateDepartureDate()
+        updateArrivalDate()
+    }
+
+    fun setupForCreate() {
+        type = Type.CREATE
+        addPlaceView()
+    }
+
+    fun setupForUpdate(id: String) {
+        type = Type.UPDATE
+        val task = ticketRepository.getTicket(id)
+        task.listener = object : TicketRepository.FetchTicketTask.Listener {
+            override fun onDataLoaded(tickets: TicketWithPlaces) {
+                updatedTicket = tickets
+                setupInitialInfo(tickets)
+            }
+        }
+        task.execute()
+    }
+
+    fun setupInitialInfo(ticket: TicketWithPlaces) {
+        sourceEditText.setText(ticket.ticket.source)
+        destinationEditText.setText(ticket.ticket.destination)
+        departureDate.time = ticket.ticket.departureDate
+        arrivalDate.time = ticket.ticket.arrivalDate
+
+        ticket.places.forEach {
+            addPlaceView(it)
+        }
+        updateDepartureDate()
+        updateArrivalDate()
+        validateInput()
     }
 
     override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
@@ -185,17 +233,33 @@ class AddTicketActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListene
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == R.id.save_button) {
-            val ticket = Ticket(sourceEditText.text.toString(), destinationEditText.text.toString(), departureDate.time, arrivalDate.time)
-            val ticketWithPlaces = TicketWithPlaces()
-            ticketWithPlaces.ticket = ticket
-            places.forEach { it.ticketId = ticket.id }
-            ticketWithPlaces.places = places
-            ticketRepository.create(ticketWithPlaces)
+            when (type) {
+                Type.CREATE -> createTicket()
+                Type.UPDATE -> updateTicket()
+            }
             setResult(Activity.RESULT_OK)
             finish()
             return true
         } else {
             return false
+        }
+    }
+
+    fun createTicket() {
+        val ticket = Ticket(sourceEditText.text.toString(), destinationEditText.text.toString(), departureDate.time, arrivalDate.time)
+        val ticketWithPlaces = TicketWithPlaces()
+        ticketWithPlaces.ticket = ticket
+        places.forEach { it.ticketId = ticket.id }
+        ticketWithPlaces.places = places
+        ticketRepository.create(ticketWithPlaces)
+    }
+
+    fun updateTicket() {
+        updatedTicket?.let {
+            val newTicket = Ticket(sourceEditText.text.toString(), destinationEditText.text.toString(), departureDate.time, arrivalDate.time, id = it.ticket.id)
+            it.ticket = newTicket
+            it.places = places
+            ticketRepository.update(it)
         }
     }
 
@@ -211,19 +275,26 @@ class AddTicketActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListene
     }
 
     fun addPlaceView() {
+        val newPlace = Place()
+        addPlaceView(newPlace)
+    }
+
+    fun addPlaceView(place: Place) {
         val view = layoutInflater.inflate(R.layout.edit_place_view, linearLayout, false) as EditPlaceView
         val index = linearLayout.indexOfChild(addPlaceButton.parent as View)
         linearLayout.addView(view, index)
-        val newPlace = Place()
-        places.add(newPlace)
-        view.placeId = newPlace.id
+        places.add(place)
+        view.placeId = place.id
         view.removeButton.setOnClickListener {
             removePlaceView(it)
         }
 
+        if (place.carriage > 0) {
+            view.carriageEditText.setText(place.carriage.toString())
+        }
         view.carriageEditText.addTextChangedListener(object : TextWatcher {
             override fun onTextChanged(string: CharSequence?, start: Int, before: Int, count: Int) {
-                newPlace.carriage = string.toString().toIntOrNull() ?: 0
+                place.carriage = string.toString().toIntOrNull() ?: 0
                 validateInput()
             }
 
@@ -236,9 +307,10 @@ class AddTicketActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListene
             }
         })
 
+        view.seatEditText.setText(place.seat)
         view.seatEditText.addTextChangedListener(object : TextWatcher {
             override fun onTextChanged(string: CharSequence?, start: Int, before: Int, count: Int) {
-                newPlace.seat = string.toString()
+                place.seat = string.toString()
                 validateInput()
             }
 

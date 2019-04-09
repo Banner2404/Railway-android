@@ -13,6 +13,8 @@
     <string name="seat">Seat</string>
     <string name="carriage">Carriage</string>
     <string name="hyphen">-</string>
-    >
+    <string name="delete_ticket_title">Delete ticket?</string>
+    <string name="delete_ticket_message">Are you sure want to delete ticket?</string>
+
 
 </resources>

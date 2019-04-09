@@ -32,6 +32,21 @@ class TicketRepository @Inject constructor(var context: Context) {
         }
     }
 
+    fun delete(ticket: TicketWithPlaces) {
+        ticket.places.forEach {
+            DeletePlaceTask(database, it).execute()
+        }
+
+        DeleteTicketTask(database, ticket.ticket).execute()
+    }
+
+    fun update(ticket: TicketWithPlaces) {
+        UpdateTicketTask(database, ticket.ticket).execute()
+        for (place in ticket.places) {
+            CreatePlaceTask(database, place).execute()
+        }
+    }
+
     class FetchTask(val database: Database): AsyncTask<Void, Void, ArrayList<TicketWithPlaces>>() {
 
         var listener: Listener? = null
@@ -80,10 +95,34 @@ class TicketRepository @Inject constructor(var context: Context) {
         }
     }
 
+    class UpdateTicketTask(val database: Database, val ticket: Ticket): AsyncTask<Void, Void, Void>() {
+
+        override fun doInBackground(vararg params: Void?): Void? {
+            database.ticketDao().updateTicket(ticket)
+            return null
+        }
+    }
+
     class CreatePlaceTask(val database: Database, val place: Place): AsyncTask<Void, Void, Void>() {
 
         override fun doInBackground(vararg params: Void?): Void? {
             database.placeDao().insertPlace(place)
+            return null
+        }
+    }
+
+    class DeletePlaceTask(val database: Database, val place: Place): AsyncTask<Void, Void, Void>() {
+
+        override fun doInBackground(vararg params: Void?): Void? {
+            database.placeDao().deletePlace(place)
+            return null
+        }
+    }
+
+    class DeleteTicketTask(val database: Database, val ticket: Ticket): AsyncTask<Void, Void, Void>() {
+
+        override fun doInBackground(vararg params: Void?): Void? {
+            database.ticketDao().deleteTicket(ticket)
             return null
         }
     }

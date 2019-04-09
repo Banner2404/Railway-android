@@ -59,7 +59,7 @@ class TicketListActivity : AppCompatActivity(), TicketListDataAdapter.Listener {
     override fun onTicketClick(ticket: TicketWithPlaces) {
         val intent = Intent(this, TicketDetailsActivity::class.java)
         intent.putExtra(TICKET_ID, ticket.ticket.id)
-        startActivity(intent)
+        startActivityForResult(intent, 0)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

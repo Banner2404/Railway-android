@@ -1,7 +1,12 @@
 package com.esobol.Railway.activities
 
+import android.app.Activity
+import android.content.DialogInterface
+import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.support.v7.app.AlertDialog
+import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.TextView
 import com.esobol.Railway.MyApplication
@@ -41,6 +46,14 @@ class TicketDetailsActivity : AppCompatActivity() {
         placesLinearLayout = findViewById(R.id.places_linear_layout)
 
         fetchTicket()
+
+        findViewById<Button>(R.id.delete_button).setOnClickListener {
+            showDeleteDialogue()
+        }
+
+        findViewById<Button>(R.id.edit_button).setOnClickListener {
+            editTicket()
+        }
     }
 
     fun fetchTicket() {
@@ -73,5 +86,36 @@ class TicketDetailsActivity : AppCompatActivity() {
         view.carriageTextView.text = place.carriage.toString()
         view.seatTextView.text = place.seat
         placesLinearLayout.addView(view)
+    }
+
+    fun showDeleteDialogue() {
+        AlertDialog.Builder(this)
+            .setTitle(getString(R.string.delete_ticket_title))
+            .setMessage(getString(R.string.delete_ticket_message))
+            .setPositiveButton(android.R.string.yes, object: DialogInterface.OnClickListener {
+                override fun onClick(dialog: DialogInterface?, which: Int) {
+                    deleteTicket()
+                }
+            })
+            .setNegativeButton(android.R.string.no, null)
+            .show()
+    }
+
+    fun deleteTicket() {
+        ticket?.let {
+            ticketRepository.delete(it)
+        }
+        setResult(Activity.RESULT_OK)
+        finish()
+    }
+
+    fun editTicket() {
+        val intent = Intent(this, AddTicketActivity::class.java)
+        intent.putExtra(AddTicketActivity.TICKET_ID, ticketId)
+        startActivityForResult(intent, 0)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        fetchTicket()
     }
 }
