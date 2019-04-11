@@ -3,8 +3,14 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
+        android:id="@+id/settings"
+        android:icon="@drawable/settings_button"
+        android:title="@string/settings_menu"
+        app:showAsAction="ifRoom" />
+
+    <item
         android:id="@+id/add_ticket"
-        android:icon="@android:drawable/ic_input_add"
+        android:icon="@drawable/add_button"
         android:title="@string/add_ticket_menu"
-        app:showAsAction="always" />
+        app:showAsAction="ifRoom" />
 </menu>

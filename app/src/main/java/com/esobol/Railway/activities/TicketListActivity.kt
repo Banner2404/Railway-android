@@ -3,6 +3,7 @@ package com.esobol.Railway.activities
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.provider.Settings
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.Menu
@@ -50,6 +51,10 @@ class TicketListActivity : AppCompatActivity(), TicketListDataAdapter.Listener {
         if (item.itemId == R.id.add_ticket) {
             val intent = Intent(this, AddTicketActivity::class.java)
             startActivityForResult(intent, 0)
+            return true
+        } else if (item.itemId == R.id.settings) {
+            val intent = Intent(this, SettingsActivity::class.java)
+            startActivity(intent)
             return true
         } else {
             return super.onOptionsItemSelected(item)

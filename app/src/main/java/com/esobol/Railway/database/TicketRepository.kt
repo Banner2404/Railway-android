@@ -4,9 +4,7 @@ import android.arch.persistence.room.Room
 import android.content.Context
 import android.os.AsyncTask
 import com.esobol.Railway.activities.TicketListActivity
-import com.esobol.Railway.models.Place
-import com.esobol.Railway.models.Ticket
-import com.esobol.Railway.models.TicketWithPlaces
+import com.esobol.Railway.models.*
 import dagger.Component
 import javax.inject.Inject
 import javax.inject.Named
@@ -45,6 +43,14 @@ class TicketRepository @Inject constructor(var context: Context) {
         for (place in ticket.places) {
             CreatePlaceTask(database, place).execute()
         }
+    }
+
+    fun getNotificationAlerts() : FetchNotificationAlertsTask {
+        return FetchNotificationAlertsTask(database)
+    }
+
+    fun addNotificationAlert(alert: NotificationAlert) {
+        CreateNotificationAlertTask(database, alert).execute()
     }
 
     class FetchTask(val database: Database): AsyncTask<Void, Void, ArrayList<TicketWithPlaces>>() {
@@ -123,6 +129,36 @@ class TicketRepository @Inject constructor(var context: Context) {
 
         override fun doInBackground(vararg params: Void?): Void? {
             database.ticketDao().deleteTicket(ticket)
+            return null
+        }
+    }
+
+    class FetchNotificationAlertsTask(val database: Database): AsyncTask<Void, Void, Set<NotificationAlert>>() {
+
+        var listener: Listener? = null
+
+        override fun doInBackground(vararg args: Void?): Set<NotificationAlert> {
+            return database.notificationAlertDao().getNotificationAlerts().map { NotificationAlert.values()[it.value] }.toSet()
+        }
+
+        override fun onPostExecute(result: Set<NotificationAlert>?) {
+            super.onPostExecute(result)
+            result?.let {
+                listener?.onDataLoaded(it)
+            }
+        }
+
+        interface Listener {
+            fun onDataLoaded(tickets: Set<NotificationAlert>)
+        }
+    }
+
+    class CreateNotificationAlertTask(val database: Database, val alert: NotificationAlert): AsyncTask<Void, Void, Void>() {
+
+        override fun doInBackground(vararg params: Void?): Void? {
+            val entity = NotificationAlertEntity()
+            entity.value = alert.ordinal
+            database.notificationAlertDao().insertNotificationAlert(entity)
             return null
         }
     }

@@ -2,8 +2,10 @@
     <string name="app_name">Railway</string>
     <string name="tickets_title">Tickets</string>
     <string name="add_ticket_title">Add Ticket</string>
+    <string name="settings_title">Settings</string>
     <string name="ticket_list_stations_title">%s - %s</string>
     <string name="add_ticket_menu">Add ticket</string>>
+    <string name="settings_menu">Settings</string>>
     <string name="placeholder_source_station">Source</string>>
     <string name="placeholder_destination_station">Destination</string>>
     <string name="departure">Departure</string>>
@@ -15,6 +17,8 @@
     <string name="hyphen">-</string>
     <string name="delete_ticket_title">Delete ticket?</string>
     <string name="delete_ticket_message">Are you sure want to delete ticket?</string>
+    <string name="add_notification_button">Add</string>
+    <string name="notifications_switch">Notifications</string>
 
 
 </resources>

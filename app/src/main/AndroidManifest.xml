@@ -11,11 +11,14 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
+            android:name=".activities.SettingsActivity"
+            android:label="@string/settings_title"/>
+        <activity
             android:name=".activities.TicketDetailsActivity"
-            android:label="@string/tickets_title"></activity>
+            android:label="@string/tickets_title" />
         <activity
             android:name=".activities.AddTicketActivity"
-            android:label="@string/add_ticket_title"></activity>
+            android:label="@string/add_ticket_title" />
         <activity
             android:name=".activities.TicketListActivity"
             android:label="@string/tickets_title">

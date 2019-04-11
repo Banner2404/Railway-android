@@ -7,5 +7,6 @@
     <color name="cardBackgroundColor">#F2F2F0</color>
     <color name="defaultTextColor">#043B40</color>
     <color name="errorTextColor">#FF0000</color>
+    <color name="valueTextColor">#9A9A9A</color>
 
 </resources>
