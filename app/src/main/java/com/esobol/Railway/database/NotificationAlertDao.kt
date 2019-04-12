@@ -1,9 +1,6 @@
 package com.esobol.Railway.database
 
-import android.arch.persistence.room.Dao
-import android.arch.persistence.room.Insert
-import android.arch.persistence.room.OnConflictStrategy
-import android.arch.persistence.room.Query
+import android.arch.persistence.room.*
 import com.esobol.Railway.models.NotificationAlert
 import com.esobol.Railway.models.NotificationAlertEntity
 
@@ -15,4 +12,7 @@ interface NotificationAlertDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertNotificationAlert(alert: NotificationAlertEntity)
+
+    @Delete
+    fun deleteNotificationAlert(alert: NotificationAlertEntity)
 }

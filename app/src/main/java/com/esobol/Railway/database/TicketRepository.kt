@@ -53,6 +53,10 @@ class TicketRepository @Inject constructor(var context: Context) {
         CreateNotificationAlertTask(database, alert).execute()
     }
 
+    fun deleteNotificationAlert(alert: NotificationAlert) {
+        DeleteNotificationAlertTask(database, alert).execute()
+    }
+
     class FetchTask(val database: Database): AsyncTask<Void, Void, ArrayList<TicketWithPlaces>>() {
 
         var listener: Listener? = null
@@ -159,6 +163,16 @@ class TicketRepository @Inject constructor(var context: Context) {
             val entity = NotificationAlertEntity()
             entity.value = alert.ordinal
             database.notificationAlertDao().insertNotificationAlert(entity)
+            return null
+        }
+    }
+
+    class DeleteNotificationAlertTask(val database: Database, val alert: NotificationAlert): AsyncTask<Void, Void, Void>() {
+
+        override fun doInBackground(vararg params: Void?): Void? {
+            val entity = NotificationAlertEntity()
+            entity.value = alert.ordinal
+            database.notificationAlertDao().deleteNotificationAlert(entity)
             return null
         }
     }

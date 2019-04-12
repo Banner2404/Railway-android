@@ -19,6 +19,21 @@
     <string name="delete_ticket_message">Are you sure want to delete ticket?</string>
     <string name="add_notification_button">Add</string>
     <string name="notifications_switch">Notifications</string>
-
+    <string name="at_event_time">At departure time</string>
+    <string name="five_minutes">5 minutes before</string>
+    <string name="ten_minutes">10 minutes before</string>
+    <string name="fifteen_minutes">15 minutes before</string>
+    <string name="half_hour">30 minutes before</string>
+    <string name="one_hour">1 hour before</string>
+    <string name="two_hours">2 hours before</string>
+    <string name="first">First</string>
+    <string name="second">Second</string>
+    <string name="third">Third</string>
+    <string name="fourth">Fourth</string>
+    <string name="fifth">Fifth</string>
+    <string name="sixth">Sixth</string>
+    <string name="seventh">Seventh</string>
+    <string name="eighth">Eighth</string>
+    <string name="ninth">Ninth</string>
 
 </resources>
