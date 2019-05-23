@@ -9,6 +9,7 @@ import android.view.View
 import android.widget.*
 import com.esobol.Railway.MyApplication
 import com.esobol.Railway.R
+import com.esobol.Railway.database.NotificationManager
 import com.esobol.Railway.database.TicketRepository
 import com.esobol.Railway.models.NotificationAlert
 import com.esobol.Railway.views.NotificationView
@@ -17,10 +18,9 @@ import javax.inject.Inject
 class SettingsActivity : AppCompatActivity(), DialogInterface.OnClickListener {
 
     @Inject
-    lateinit var ticketRepository: TicketRepository
+    lateinit var notificationManager: NotificationManager
     lateinit var linearLayout: LinearLayout
     lateinit var addNotificationButton: Button
-    var notificationAlerts: ArrayList<NotificationAlert> = arrayListOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,7 +33,12 @@ class SettingsActivity : AppCompatActivity(), DialogInterface.OnClickListener {
         addNotificationButton.setOnClickListener {
             addButtonClick()
         }
-        loadNotifications()
+
+        notificationManager.loadNotifications(object : NotificationManager.Listener {
+            override fun onNotificationsLoaded() {
+                showNotifications()
+            }
+        })
     }
 
     fun addButtonClick() {
@@ -41,17 +46,6 @@ class SettingsActivity : AppCompatActivity(), DialogInterface.OnClickListener {
             .setTitle("Test")
             .setAdapter(createSpinnerAdapter(), this)
             .show()
-    }
-
-    fun loadNotifications() {
-        val task = ticketRepository.getNotificationAlerts()
-        task.listener = object : TicketRepository.FetchNotificationAlertsTask.Listener {
-            override fun onDataLoaded(tickets: Set<NotificationAlert>) {
-                notificationAlerts = ArrayList(tickets)
-                showNotifications()
-            }
-        }
-        task.execute()
     }
 
     fun removeNotificationViews() {
@@ -65,13 +59,14 @@ class SettingsActivity : AppCompatActivity(), DialogInterface.OnClickListener {
 
     fun showNotifications() {
         removeNotificationViews()
-        notificationAlerts.indices.zip(notificationAlerts).forEach {
+        notificationManager.notificationAlerts.indices.zip(notificationManager.notificationAlerts).forEach {
             addNotificationView(it.second, it.first)
         }
+        updateAddNotificationButton()
     }
 
     fun addNotification(alert: NotificationAlert) {
-        notificationAlerts.add(alert)
+        notificationManager.add(alert)
         showNotifications()
     }
 
@@ -83,7 +78,7 @@ class SettingsActivity : AppCompatActivity(), DialogInterface.OnClickListener {
         linearLayout.addView(view, viewIndex)
 
         view.setOnClickListener {
-            notificationAlerts.remove(notificationAlert)
+            notificationManager.remove(notificationAlert)
             showNotifications()
         }
     }
@@ -117,15 +112,20 @@ class SettingsActivity : AppCompatActivity(), DialogInterface.OnClickListener {
     }
 
     fun createSpinnerAdapter() : ListAdapter {
-        return ArrayAdapter(this, android.R.layout.select_dialog_singlechoice, availableAlerts().map { titleForNotificationAlert(it) })
+        val alerts = notificationManager.availableAlerts()
+        return ArrayAdapter(this, android.R.layout.select_dialog_singlechoice, alerts.map { titleForNotificationAlert(it) })
     }
 
-    fun availableAlerts() : List<NotificationAlert> {
-        return NotificationAlert.values().filter { !notificationAlerts.contains(it) }
+    fun updateAddNotificationButton() {
+        if (notificationManager.availableAlerts().isEmpty()) {
+            addNotificationButton.visibility = View.GONE
+        } else {
+            addNotificationButton.visibility = View.VISIBLE
+        }
     }
 
     override fun onClick(dialog: DialogInterface?, which: Int) {
-        val alert = availableAlerts()[which]
+        val alert = notificationManager.availableAlerts()[which]
         addNotification(alert)
     }
 }

@@ -10,6 +10,7 @@ import com.esobol.Railway.activities.TicketListActivity
 import dagger.Component
 import dagger.Module
 import dagger.Provides
+import javax.inject.Singleton
 
 class MyApplication: Application() {
 
@@ -23,6 +24,8 @@ class MyApplication: Application() {
             .builder()
             .applicationContextModule(ApplicationContextModule(applicationContext))
             .build()
+
+        
     }
 
     fun getAppContext() : Context {
