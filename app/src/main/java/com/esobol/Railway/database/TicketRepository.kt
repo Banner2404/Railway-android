@@ -153,7 +153,7 @@ class TicketRepository @Inject constructor(var context: Context) {
         }
 
         interface Listener {
-            fun onDataLoaded(tickets: Set<NotificationAlert>)
+            fun onDataLoaded(notifications: Set<NotificationAlert>)
         }
     }
 

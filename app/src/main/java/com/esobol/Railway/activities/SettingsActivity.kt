@@ -1,7 +1,6 @@
 package com.esobol.Railway.activities
 
 import android.content.DialogInterface
-import android.opengl.Visibility
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v7.app.AlertDialog
@@ -9,8 +8,7 @@ import android.view.View
 import android.widget.*
 import com.esobol.Railway.MyApplication
 import com.esobol.Railway.R
-import com.esobol.Railway.database.NotificationManager
-import com.esobol.Railway.database.TicketRepository
+import com.esobol.Railway.notifications.NotificationManager
 import com.esobol.Railway.models.NotificationAlert
 import com.esobol.Railway.views.NotificationView
 import javax.inject.Inject
@@ -21,6 +19,7 @@ class SettingsActivity : AppCompatActivity(), DialogInterface.OnClickListener {
     lateinit var notificationManager: NotificationManager
     lateinit var linearLayout: LinearLayout
     lateinit var addNotificationButton: Button
+    lateinit var notificationSwitch: Switch
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,6 +28,7 @@ class SettingsActivity : AppCompatActivity(), DialogInterface.OnClickListener {
 
         linearLayout = findViewById(R.id.linear_layout)
         addNotificationButton = findViewById(R.id.add_notification_button)
+        notificationSwitch = findViewById(R.id.notification_switch)
 
         addNotificationButton.setOnClickListener {
             addButtonClick()
@@ -39,6 +39,11 @@ class SettingsActivity : AppCompatActivity(), DialogInterface.OnClickListener {
                 showNotifications()
             }
         })
+
+        notificationSwitch.isChecked = notificationManager.isEnabled
+        notificationSwitch.setOnCheckedChangeListener { _, isChecked ->
+            notificationManager.isEnabled = isChecked
+        }
     }
 
     fun addButtonClick() {
