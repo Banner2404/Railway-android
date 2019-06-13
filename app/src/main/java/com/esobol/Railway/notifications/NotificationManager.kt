@@ -57,7 +57,7 @@ object NotificationManager {
     }
 
     private fun setupNotifications() {
-        //alarmScheduler.scheduleAlarms()
+        AlarmScheduler.scheduleAlarms()
     }
 
     interface Listener {

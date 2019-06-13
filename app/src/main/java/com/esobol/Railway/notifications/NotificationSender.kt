@@ -8,6 +8,7 @@ import android.content.Intent
 import android.os.Build
 import android.support.v4.app.NotificationCompat
 import android.support.v4.app.NotificationManagerCompat
+import android.text.format.DateUtils
 import com.esobol.Railway.R
 import com.esobol.Railway.activities.TicketListActivity
 import com.esobol.Railway.models.TicketWithPlaces
@@ -28,7 +29,10 @@ class NotificationSender(val context: Context) {
         val notificationBuilder = NotificationCompat.Builder(context, notificationChannelId).apply {
             setSmallIcon(R.drawable.delete_button)
             setContentTitle(context.getString(R.string.notification_title, ticket.ticket.source, ticket.ticket.destination))
-            setContentText(createSeatString(ticket))
+            val timeString = createTimeString(ticket, context)
+            var placeString = createSeatString(ticket) ?: ""
+            placeString = " " + placeString
+            setContentText(timeString + placeString)
             priority = NotificationCompat.PRIORITY_DEFAULT
             setAutoCancel(true)
 
@@ -53,6 +57,15 @@ class NotificationSender(val context: Context) {
             val notificationManager = context.getSystemService(NotificationManager::class.java)
             notificationManager.createNotificationChannel(channel)
         }
+    }
+
+    private fun createTimeString(ticket: TicketWithPlaces, context: Context) : String {
+        val now = System.currentTimeMillis() - 10 * 1000
+        val departureTime = ticket.ticket.departureDate.time
+        if (departureTime - now < 60 * 1000) {
+            return context.getString(R.string.now)
+        }
+        return DateUtils.getRelativeTimeSpanString(ticket.ticket.departureDate.time, now, DateUtils.MINUTE_IN_MILLIS).toString()
     }
 
     private fun createSeatString(ticket: TicketWithPlaces) : String? {

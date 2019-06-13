@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.preference.PreferenceManager
+import android.text.format.DateUtils
 import com.esobol.Railway.MyApplication
 import com.esobol.Railway.activities.SettingsActivity
 import com.esobol.Railway.database.TicketRepository
