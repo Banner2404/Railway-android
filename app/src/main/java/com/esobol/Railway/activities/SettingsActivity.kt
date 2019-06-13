@@ -11,12 +11,10 @@ import com.esobol.Railway.R
 import com.esobol.Railway.notifications.NotificationManager
 import com.esobol.Railway.models.NotificationAlert
 import com.esobol.Railway.views.NotificationView
-import javax.inject.Inject
 
 class SettingsActivity : AppCompatActivity(), DialogInterface.OnClickListener {
 
-    @Inject
-    lateinit var notificationManager: NotificationManager
+    val notificationManager = NotificationManager
     lateinit var linearLayout: LinearLayout
     lateinit var addNotificationButton: Button
     lateinit var notificationSwitch: Switch
@@ -24,7 +22,6 @@ class SettingsActivity : AppCompatActivity(), DialogInterface.OnClickListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
-        MyApplication.component.inject(this)
 
         linearLayout = findViewById(R.id.linear_layout)
         addNotificationButton = findViewById(R.id.add_notification_button)

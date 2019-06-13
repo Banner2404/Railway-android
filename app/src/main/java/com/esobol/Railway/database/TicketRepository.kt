@@ -1,17 +1,17 @@
 package com.esobol.Railway.database
 
+import android.app.AlarmManager
 import android.arch.persistence.room.Room
 import android.content.Context
 import android.os.AsyncTask
+import com.esobol.Railway.MyApplication
 import com.esobol.Railway.activities.TicketListActivity
 import com.esobol.Railway.models.*
-import dagger.Component
-import javax.inject.Inject
-import javax.inject.Named
+import com.esobol.Railway.notifications.AlarmScheduler
 
-class TicketRepository @Inject constructor(var context: Context) {
+object TicketRepository {
 
-    val database: Database = Room.databaseBuilder(context, Database::class.java, "database")
+    val database: Database = Room.databaseBuilder(MyApplication.context, Database::class.java, "database")
         .fallbackToDestructiveMigration()
         .build()
 
@@ -28,6 +28,7 @@ class TicketRepository @Inject constructor(var context: Context) {
         for (place in ticket.places) {
             CreatePlaceTask(database, place).execute()
         }
+        AlarmScheduler.scheduleAlarms()
     }
 
     fun delete(ticket: TicketWithPlaces) {
@@ -36,6 +37,7 @@ class TicketRepository @Inject constructor(var context: Context) {
         }
 
         DeleteTicketTask(database, ticket.ticket).execute()
+        AlarmScheduler.scheduleAlarms()
     }
 
     fun update(ticket: TicketWithPlaces) {
@@ -43,6 +45,7 @@ class TicketRepository @Inject constructor(var context: Context) {
         for (place in ticket.places) {
             CreatePlaceTask(database, place).execute()
         }
+        AlarmScheduler.scheduleAlarms()
     }
 
     fun getNotificationAlerts() : FetchNotificationAlertsTask {
@@ -93,7 +96,7 @@ class TicketRepository @Inject constructor(var context: Context) {
         }
 
         interface Listener {
-            fun onDataLoaded(tickets: TicketWithPlaces)
+            fun onDataLoaded(ticket: TicketWithPlaces)
         }
     }
 

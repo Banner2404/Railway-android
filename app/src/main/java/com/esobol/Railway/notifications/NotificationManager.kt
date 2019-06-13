@@ -5,32 +5,32 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Build
 import android.preference.PreferenceManager
 import android.support.v4.app.NotificationCompat
 import android.support.v4.app.NotificationManagerCompat
+import com.esobol.Railway.MyApplication
 import com.esobol.Railway.R
 import com.esobol.Railway.activities.TicketListActivity
 import com.esobol.Railway.database.TicketRepository
 import com.esobol.Railway.models.NotificationAlert
-import javax.inject.Inject
 
-class NotificationManager @Inject constructor(var ticketRepository: TicketRepository, var context: Context,
-                                              var alarmScheduler: AlarmScheduler) {
+object NotificationManager {
 
-    companion object {
-        val IS_ENABLED_KEY = "IS_ENABLED_KEY"
-    }
+    val IS_ENABLED_KEY = "IS_ENABLED_KEY"
 
     var notificationAlerts: ArrayList<NotificationAlert> = arrayListOf()
+    val preferences = PreferenceManager.getDefaultSharedPreferences(MyApplication.context)
     var isEnabled: Boolean
-        get() = PreferenceManager.getDefaultSharedPreferences(context).getBoolean(IS_ENABLED_KEY, false)
+        get() = preferences.getBoolean(IS_ENABLED_KEY, false)
         set(value) {
-            PreferenceManager.getDefaultSharedPreferences(context).edit().putBoolean(IS_ENABLED_KEY, value).apply()
+            preferences.edit().putBoolean(IS_ENABLED_KEY, value).apply()
+            setupNotifications()
         }
 
     fun loadNotifications(listener: Listener) {
-        val task = ticketRepository.getNotificationAlerts()
+        val task = TicketRepository.getNotificationAlerts()
         task.listener = object : TicketRepository.FetchNotificationAlertsTask.Listener {
             override fun onDataLoaded(notifications: Set<NotificationAlert>) {
                 notificationAlerts = ArrayList(notifications)
@@ -42,13 +42,14 @@ class NotificationManager @Inject constructor(var ticketRepository: TicketReposi
 
     fun add(alert: NotificationAlert) {
         notificationAlerts.add(alert)
-        ticketRepository.addNotificationAlert(alert)
+        TicketRepository.addNotificationAlert(alert)
         setupNotifications()
     }
 
     fun remove(alert: NotificationAlert) {
         notificationAlerts.remove(alert)
-        ticketRepository.deleteNotificationAlert(alert)
+        TicketRepository.deleteNotificationAlert(alert)
+        setupNotifications()
     }
 
     fun availableAlerts() : List<NotificationAlert> {
@@ -56,7 +57,7 @@ class NotificationManager @Inject constructor(var ticketRepository: TicketReposi
     }
 
     private fun setupNotifications() {
-        alarmScheduler.scheduleAlarms()
+        //alarmScheduler.scheduleAlarms()
     }
 
     interface Listener {

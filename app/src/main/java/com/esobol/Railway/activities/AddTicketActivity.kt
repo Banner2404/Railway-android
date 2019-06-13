@@ -24,13 +24,11 @@ import com.esobol.Railway.models.TicketWithPlaces
 import com.esobol.Railway.views.EditPlaceView
 import java.text.SimpleDateFormat
 import java.util.*
-import javax.inject.Inject
 import kotlin.collections.ArrayList
 
 class AddTicketActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener, View.OnClickListener, TextWatcher {
 
-    @Inject
-    lateinit var ticketRepository: TicketRepository
+    val ticketRepository = TicketRepository
     private lateinit var sourceEditText: EditText
     private lateinit var destinationEditText: EditText
     private lateinit var departureDateEditText: EditText
@@ -58,7 +56,6 @@ class AddTicketActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListene
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_ticket)
-        MyApplication.component.inject(this)
 
         sourceEditText = findViewById(R.id.source_text_view)
         destinationEditText = findViewById(R.id.destination_text_view)

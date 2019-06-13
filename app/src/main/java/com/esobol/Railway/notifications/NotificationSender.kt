@@ -10,6 +10,7 @@ import android.support.v4.app.NotificationCompat
 import android.support.v4.app.NotificationManagerCompat
 import com.esobol.Railway.R
 import com.esobol.Railway.activities.TicketListActivity
+import com.esobol.Railway.models.TicketWithPlaces
 
 class NotificationSender(val context: Context) {
 
@@ -20,14 +21,14 @@ class NotificationSender(val context: Context) {
     val notificationName = "trainNotification"
     val notificationChannelId = "${context.packageName}-$notificationName"
 
-    fun sendNotification() {
+
+    fun sendNotification(ticket: TicketWithPlaces) {
         createNotificationChannel()
 
         val notificationBuilder = NotificationCompat.Builder(context, notificationChannelId).apply {
             setSmallIcon(R.drawable.delete_button)
-            setContentTitle("Title")
-            setContentText("Text")
-            setStyle(NotificationCompat.BigTextStyle().bigText("Big text"))
+            setContentTitle(context.getString(R.string.notification_title, ticket.ticket.source, ticket.ticket.destination))
+            setContentText(createSeatString(ticket))
             priority = NotificationCompat.PRIORITY_DEFAULT
             setAutoCancel(true)
 
@@ -52,5 +53,11 @@ class NotificationSender(val context: Context) {
             val notificationManager = context.getSystemService(NotificationManager::class.java)
             notificationManager.createNotificationChannel(channel)
         }
+    }
+
+    private fun createSeatString(ticket: TicketWithPlaces) : String? {
+        if (ticket.places.size != 1) { return null }
+        val place = ticket.places.first()
+        return context.getString(R.string.notification_body_seat, place.carriage, place.seat)
     }
 }

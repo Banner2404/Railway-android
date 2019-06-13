@@ -1,54 +1,25 @@
 package com.esobol.Railway
 
 import android.app.Activity
+import android.app.AlarmManager
 import android.app.Application
 import android.content.Context
 import com.esobol.Railway.activities.AddTicketActivity
 import com.esobol.Railway.activities.SettingsActivity
 import com.esobol.Railway.activities.TicketDetailsActivity
 import com.esobol.Railway.activities.TicketListActivity
-import dagger.Component
-import dagger.Module
-import dagger.Provides
-import javax.inject.Singleton
+import com.esobol.Railway.database.TicketRepository
+import com.esobol.Railway.notifications.AlarmReceiver
 
 class MyApplication: Application() {
 
     companion object {
-        lateinit var component: InjectComponent
+        lateinit var context: Context
     }
 
     override fun onCreate() {
         super.onCreate()
-        component = DaggerInjectComponent
-            .builder()
-            .applicationContextModule(ApplicationContextModule(applicationContext))
-            .build()
 
-        
-    }
-
-    fun getAppContext() : Context {
-        return applicationContext
-    }
-}
-
-@Component(modules = arrayOf(ApplicationContextModule::class))
-interface InjectComponent {
-
-    fun inject(activity: TicketListActivity)
-    fun inject(activity: AddTicketActivity)
-    fun inject(activity: TicketDetailsActivity)
-    fun inject(activity: SettingsActivity)
-
-}
-
-
-@Module
-class ApplicationContextModule(val context: Context) {
-
-    @Provides
-    fun provideContext(): Context {
-        return context
+        context = applicationContext
     }
 }

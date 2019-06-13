@@ -35,5 +35,7 @@
     <string name="seventh">Seventh</string>
     <string name="eighth">Eighth</string>
     <string name="ninth">Ninth</string>
+    <string name="notification_title">Train %s - %s</string>
+    <string name="notification_body_seat">%d carriage %s seat</string>
 
 </resources>
